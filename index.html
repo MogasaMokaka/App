@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram TON Connect App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ton-connect-sdk@latest/dist/index.min.js"></script>
+</head>
+<body>
+    <h1>Welcome to Telegram TON Connect App</h1>
+    <button id="connect-wallet">Connect Wallet</button>
+    <script>
+        Telegram.WebApp.ready();
+
+        document.getElementById('connect-wallet').addEventListener('click', async () => {
+            const tonConnect = new TonConnect();
+            try {
+                const connection = await tonConnect.connect();
+                alert(`Connected to wallet: ${connection.wallet.address}`);
+            } catch (error) {
+                alert('Connection failed: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
