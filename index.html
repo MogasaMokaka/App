@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram TON Connect App</title>
+    <title>Telegram Weather App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ton-connect-sdk@latest/dist/index.min.js"></script>
     <style>
         body {
             display: flex;
@@ -26,6 +25,15 @@
         h1 {
             color: #333;
         }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
         button {
             padding: 10px 20px;
             font-size: 16px;
@@ -39,23 +47,48 @@
         button:hover {
             background-color: #0056b3;
         }
+        .weather-info {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to Telegram TON Connect App</h1>
-        <button id="connect-wallet">Connect allet</button>
+        <h1>Weather App</h1>
+        <input type="text" id="location" placeholder="Enter location" />
+        <button id="get-weather">Get Weather</button>
+        <div class="weather-info" id="weather-info"></div>
     </div>
     <script>
         Telegram.WebApp.ready();
 
-        document.getElementById('connect-wallet').addEventListener('click', async () => {
-            const tonConnect = new TonConnect();
+        document.getElementById('get-weather').addEventListener('click', async () => {
+            const location = document.getElementById('location').value;
+            if (!location) {
+                alert('Please enter a location');
+                return;
+            }
+
+            const apiKey = 'YOUR_OPENWEATHERMAP_API_KEY';  // Replace with your OpenWeatherMap API key
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
+
             try {
-                const connection = await tonConnect.connect();
-                alert(`Connected to wallet: ${connection.wallet.address}`);
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Location not found');
+                }
+
+                const data = await response.json();
+                const weatherInfo = `
+                    <h3>Weather in ${data.name}</h3>
+                    <p>Temperature: ${data.main.temp} °C</p>
+                    <p>Weather: ${data.weather[0].description}</p>
+                    <p>Humidity: ${data.main.humidity}%</p>
+                    <p>Wind Speed: ${data.wind.speed} m/s</p>
+                `;
+                document.getElementById('weather-info').innerHTML = weatherInfo;
             } catch (error) {
-                alert('Connection failed: ' + error.message);
+                alert(error.message);
             }
         });
     </script>
