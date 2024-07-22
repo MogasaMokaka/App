@@ -3,80 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Weather App</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            text-align: center;
-            padding: 20px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333;
-        }
-        input {
-            padding: 10px;
-            font-size: 16px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .weather-info {
-            margin-top: 20px;
-        }
-        .location-image {
-            margin-top: 20px;
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+    <title>Weather App</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Weather App</h1>
-        <input type="text" id="location" placeholder="Enter location" />
-        <button id="get-weather">Get Weather</button>
-        <div class="weather-info" id="weather-info"></div>
-        <img id="location-image" class="location-image" src="" alt="" style="display:none;" />
-    </div>
+    <input type="text" id="location-input" placeholder="Enter city name">
+    <button onclick="getWeather()">Get Weather</button>
+    <button id="clear-button" onclick="clearWeatherDetails()">Clear</button>
+    <div id="weather-info"></div>
+    <img id="location-image" style="display:none;" alt="Location Image">
+
     <script>
-        Telegram.WebApp.ready();
-
-        document.getElementById('get-weather').addEventListener('click', async () => {
-            const location = document.getElementById('location').value;
-            if (!location) {
-                alert('Please enter a location');
-                return;
-            }
-
+        async function getWeather() {
+            const location = document.getElementById('location-input').value;
             const weatherApiKey = '88ee459a82d8808763fbcfeae1caea00';  // Replace with your OpenWeatherMap API key
             const unsplashApiKey = 'HvoSazIDFz737m_rXL_WOjwpGlASJaSEV0qJFM_xIYw';  // Replace with your Unsplash API key
             const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${weatherApiKey}&units=metric`;
@@ -105,7 +43,7 @@
                     <p>🌡️ Feels Like: ${weatherData.main.feels_like} °C</p>
                     <p>📏 Pressure: ${weatherData.main.pressure} hPa</p>
                     <p>🌍 Visibility: ${weatherData.visibility / 1000} km</p>
-                                    `;
+                `;
                 document.getElementById('weather-info').innerHTML = weatherInfo;
 
                 if (unsplashData.results.length > 0) {
@@ -122,7 +60,13 @@
                 document.getElementById('weather-info').innerHTML = '';
                 document.getElementById('location-image').style.display = 'none';
             }
-        });
+        }
+
+        function clearWeatherDetails() {
+            document.getElementById('weather-info').innerHTML = '';
+            document.getElementById('location-image').style.display = 'none';
+            document.getElementById('location-input').value = '';
+        }
     </script>
 </body>
 </html>
